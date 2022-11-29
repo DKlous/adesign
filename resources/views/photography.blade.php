@@ -65,12 +65,13 @@
                                                 }
                                             }
                                             if ($i < count($active_pictures)) {
-                                                $image = "img/gallery_images/" . $active_pictures[$i]->path;
+                                                $base_url = URL::to('/');
+                                                $image = $base_url . "/" . $active_pictures[$i]->path;
                                                 ?>
                                 <div class="box gallerybox16 <?= $row_and_column ?>">
-                                    <img class="galleryItem" draggable="false" src={{ asset($image) }}
+                                    <img class="galleryItem" draggable="false" src="<?= $image ?>"
                                         alt="gallery_image" onclick="showImgOnClick(this);" data-id="<?= $i ?>"
-                                        data-src={{ asset($image) }}>
+                                        data-src="<?= $image ?>">
                                 </div>
                                 <?php
                                     } else {

@@ -19,7 +19,7 @@
                 }
 
                 .aboutImage {
-                    border-top-left-radius: 10px;
+                    /* border-top-left-radius: 10px; */
                     margin-top: 24px;
                     max-width: 300px;
                     max-height: 300px;
