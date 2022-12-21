@@ -1,14 +1,17 @@
 /* Demo CSS */
 * {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
 }
 
-html, body, .containerHeader {
+html,
+body,
+.containerHeader {
   min-height: 100vh;
 }
 
@@ -87,6 +90,7 @@ li {
 }
 
 .maintext {
+  position: relative;
   color: #afafaf;
   font-weight: 400;
   /*padding-left: 308px;*/
@@ -159,7 +163,7 @@ li {
 }
 
 .active {
-  color: #F36A10 !important;
+  color: #f36a10 !important;
   font-weight: bold;
 }
 
@@ -179,73 +183,73 @@ li {
   box-sizing: border-box;
 }
 
-.formcontainer input[type=submit] {
+.formcontainer input[type="submit"] {
   background: rgba(255, 255, 255, 0);
   margin-bottom: 0;
   border-radius: 10px;
-  outline: 1px solid #F58220;
+  outline: 1px solid #f58220;
   border: none;
   color: black;
   transition: 0.4s;
   font-size: 1rem;
 }
 
-.formcontainer input[type=submit]:hover {
-  background: #F58220;
+.formcontainer input[type="submit"]:hover {
+  background: #f58220;
   color: white;
   cursor: pointer;
   transition: 0.4s;
 }
 
-.formcontainer input[type=submit]:active {
+.formcontainer input[type="submit"]:active {
   outline: 4px solid #eaba8f;
   color: white;
   transition: 0.4s;
 }
 
-input[type=submit].adesign_btn {
+input[type="submit"].adesign_btn {
   background: rgba(255, 255, 255, 0);
   margin-bottom: 0;
   border-radius: 10px;
-  outline: 1px solid #F58220;
+  outline: 1px solid #f58220;
   border: none;
   color: black;
   transition: 0.4s;
   font-size: 1rem;
 }
 
-input[type=submit].adesign_btn:hover {
-  background: #F58220;
+input[type="submit"].adesign_btn:hover {
+  background: #f58220;
   color: white;
   cursor: pointer;
   transition: 0.4s;
 }
 
-input[type=submit].adesign_btn:active {
+input[type="submit"].adesign_btn:active {
   outline: 4px solid #eaba8f;
   color: white;
   transition: 0.4s;
 }
 
-button[type=submit].adesign_btn {
+button[type="submit"].adesign_btn {
   background: rgba(255, 255, 255, 0);
   margin-bottom: 0;
   border-radius: 10px;
-  outline: 1px solid #F58220;
+  outline: 1px solid #f58220;
   border: none;
   color: black;
   transition: 0.4s;
   font-size: 1rem;
 }
 
-button[type=submit].adesign_btn:hover {
-  background: #F58220;
+button[type="submit"].adesign_btn:hover {
+  background: #f58220;
   color: white;
   cursor: pointer;
   transition: 0.4s;
 }
 
-button[type=submit].adesign_btn:active {
+button[type="submit"].adesign_btn:active {
   outline: 4px solid #eaba8f;
   color: white;
   transition: 0.4s;
@@ -310,13 +314,13 @@ button[type=submit].adesign_btn:active {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
-  background-color: #F5F5F5;
+  background-color: #f5f5f5;
 }
 
 #style-1::-webkit-scrollbar {
   border-radius: 10px;
   width: 12px;
-  background-color: #F5F5F5;
+  background-color: #f5f5f5;
 }
 
 #style-1::-webkit-scrollbar-thumb {
@@ -391,10 +395,10 @@ button[type=submit].adesign_btn:active {
 .rows .container {
   display: block;
   position: absolute;
-  top: calc(50vh - 128px);
+  left: 0;
+  top: 0;
   /* left: calc(50vw - 100px); */
   /* left: 0; */
-  right: calc(50vw - 550px);
   width: max-content;
 }
 
@@ -413,7 +417,6 @@ button[type=submit].adesign_btn:active {
   /* height: 450px; old height */
   width: 650px;
   height: 500px;
-  margin-left: -500px;
   overflow: hidden;
 }
 
@@ -497,7 +500,8 @@ button[type=submit].adesign_btn:active {
   color: #afafaf;
 }
 
-.contactform > input, .contactform > textarea {
+.contactform > input,
+.contactform > textarea {
   border: 1px solid orange !important;
   width: 15rem;
   margin-bottom: 10px;
@@ -506,13 +510,15 @@ button[type=submit].adesign_btn:active {
   padding: 10px;
 }
 
-.contactform > input[type="submit"], .contactform > input[type="reset"] {
-  background-color: #F36A10;
-  border: 1px solid #F36A10 !important;
+.contactform > input[type="submit"],
+.contactform > input[type="reset"] {
+  background-color: #f36a10;
+  border: 1px solid #f36a10 !important;
   color: white;
 }
 
-.contactform > input[placeholder]::placeholder, .contactform > textarea[placeholder]::placeholder {
+.contactform > input[placeholder]::placeholder,
+.contactform > textarea[placeholder]::placeholder {
   color: lightgrey;
 }
 
@@ -530,7 +536,8 @@ form label {
   font-weight: bold;
 }
 
-form label, form input {
+form label,
+form input {
   display: block;
   margin-bottom: 5px;
   width: 90%;
@@ -539,7 +546,7 @@ form label, form input {
 form input {
   border: solid 1px #666666;
   padding: 10px;
-  border: solid 1px #BDC7D8;
+  border: solid 1px #bdc7d8;
   margin-bottom: 20px;
 }
 
@@ -571,11 +578,11 @@ form input {
 }
 
 header {
-  background: #FDC830;
+  background: #fdc830;
   /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #F37335, #FDC830);
+  background: -webkit-linear-gradient(to right, #f37335, #fdc830);
   /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to right, #F37335, #FDC830);
+  background: linear-gradient(to right, #f37335, #fdc830);
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   padding: 5px;
   display: flex;
@@ -592,9 +599,9 @@ header > h2 {
 }
 
 .logoutButton {
-  background: #D9534F;
+  background: #d9534f;
   border-radius: 3px;
-  border: 2px solid #D9534F;
+  border: 2px solid #d9534f;
   color: white;
 }
 
@@ -604,8 +611,8 @@ header > h2 {
 }
 
 .logoutButton:active {
-  background: #C9302C;
-  border: 2px solid #C9302C;
+  background: #c9302c;
+  border: 2px solid #c9302c;
   outline: tomato;
 }
 
@@ -616,11 +623,11 @@ header > h2 {
   .logonav {
     justify-content: flex-start;
   }
+  .logonav nav > ul > li {
+    margin: 5px 0;
+  }
   nav > ul {
     flex-direction: column;
-  }
-  nav > ul > li {
-    margin: 5px 0;
   }
   .empty {
     min-width: 0;
@@ -629,9 +636,7 @@ header > h2 {
     margin: 0 0 55px 2px;
   }
   .pagecontainer {
-    height: auto !important;
-    transform: scale(0.45);
-    margin-left: -105px;
+    margin-right: 1150px;
   }
 }
 
@@ -714,7 +719,7 @@ header > h2 {
     align-items: flex-start;
   }
   nav > ul {
-    align-items: flex-start;
+    align-items: center;
   }
   nav > ul > li {
     margin: 15px 0;

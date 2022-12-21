@@ -38,6 +38,14 @@ Route::post('update_picture_position', [Gallery::class, 'updatePicturePosition']
 Route::post('make_picture_active', [Gallery::class, 'makePictureActive']);
 Route::post('make_picture_inactive', [Gallery::class, 'makePictureInactive']);
 Route::post('delete_picture', [Gallery::class, 'deletePicture']);
+Route::post('load_gallery', [Gallery::class, 'loadGallery']);
+
+//bulk actions
+Route::post('update_selected_pictures', [Gallery::class, 'UpdateSelectedPictures']);
+Route::post('activate_selected_pictures', [Gallery::class, 'activateSelectedPictures']);
+Route::post('inactivate_selected_pictures', [Gallery::class, 'inactivateSelectedPictures']);
+Route::post('delete_selected_pictures', [Gallery::class, 'deleteSelectedPictures']);
+
 
 Route::get('/admin_dashboard', function () {
     if (session()->has('email')) {

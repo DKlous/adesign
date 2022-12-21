@@ -117,12 +117,111 @@
                 background: rgba(255, 255, 255, 0);
                 border-radius: 10px;
                 outline: 1px solid #F58220;
-                line-height:24px;
-                height:26px;
+                line-height: 24px;
+                height: 26px;
+            }
+
+            .select {
+                border: none;
+                background: rgba(255, 255, 255, 0);
+                border-radius: 10px;
+                outline: none;
+                border: 1px solid #F58220;
+                border: none;
+                background: rgba(255, 255, 255, 0);
+                height: 26px;
+            }
+
+            /* The container */
+            .container {
+                display: block;
+                position: relative;
+                cursor: pointer;
+                font-size: 22px;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                background-color: rgba(255, 255, 255, 0);
+                outline: 1px solid #F58220;
+                border-radius: 5px;
+                height: 26px;
+                width: 26px;
+                /* overflow: hidden; */
+                transition: 0.4s;
+            }
+
+            /* Hide the browser's default checkbox */
+            .container input {
+                position: absolute;
+                opacity: 0;
+                cursor: pointer;
+                height: 0;
+                width: 0;
+                /* transition: 0.4s; */
+            }
+
+            /* Create a custom checkbox */
+            .checkmark {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 26px;
+                width: 26px;
+                background-color: rgba(255, 255, 255, 0);
+                pointer-events: none;
+            }
+
+            /* On mouse-over, add a grey background color */
+            .container:hover input~.checkmark {
+                background-color: rgba(255, 255, 255, 0);
+                background-color: #F58220;
+                pointer-events: none;
+                border-radius: 5px;
+                transition: 0.4s;
+            }
+
+            /* When the checkbox is checked, add a blue background */
+            .container input:checked~.checkmark {
+                /* background-color: #2196F3; default color */
+                background-color: #F58220;
+                pointer-events: none;
+                border-radius: 5px;
+                transition: 0.4s;
+            }
+
+            .container input:active~.checkmark {
+                outline: 4px solid #eaba8f;
+                border-radius: 5px;
+            }
+
+            /* Create the checkmark/indicator (hidden when not checked) */
+            .checkmark:after {
+                content: "";
+                position: absolute;
+                display: none;
+            }
+
+            /* Show the checkmark when checked */
+            .container input:checked~.checkmark:after {
+                display: block;
+            }
+
+            /* Style the checkmark/indicator */
+            .container .checkmark:after {
+                left: 9px;
+                top: 6px;
+                width: 8px;
+                height: 10px;
+                border: solid white;
+                border-width: 0 3px 3px 0;
+                -webkit-transform: rotate(45deg);
+                -ms-transform: rotate(45deg);
+                transform: rotate(45deg);
             }
         </style>
         <div class="formcontainer">
-            <details>
+            <details open>
                 <summary>Afbeeldingen uploaden</summary>
                 <div class="summary1_contents">
                     <form action="upload_image_to_folder" method="post" enctype="multipart/form-data">
@@ -136,18 +235,76 @@
                             ?>
                         </select>
                         <?php } ?>
-                        <input type="file" required name="image" id="image">
+                        <input type="file" required name="attachment[]" id="image" multiple>
                         <input type="submit" value="Zet online" class="submit_details1">
                     </form>
                 </div>
             </details>
         </div>
         <div class="formcontainer">
-            <details>
+            <details open>
                 <summary>Afbeeldingen Aanpassen & Verwijderen</summary>
                 <div class="summary2_contents">
+                    <form action="update_selected_pictures" method="post" class="action_form" onsubmit="getRecords()" id="update_selected_pictures">
+                        @csrf
+                        <script>
+                            function getRecords() {
+                                var markedCheckbox = document.querySelectorAll('input[type="checkbox"]:checked');
+                                var index = 0;
+                                var form = document.querySelector("#update_selected_pictures");
+                                for (var checkbox of markedCheckbox) {
+                                    if (index === markedCheckbox.length - 1) {
+                                        form.innerHTML += `<input type="hidden" value="${index}" name="maxAmountSelected">`;
+                                    }
+                                    form.innerHTML += `<input type="hidden" value="${checkbox.getAttribute("data-id")}" name="index${index}">`;
+                                    form.innerHTML += `<input type="hidden" value="${checkbox.parentElement.parentElement.parentElement.children[6].children[0].children[2].value}" name="gallery_position_index${index}">`;
+                                    index++;
+                                }
+                            }
+                        </script>
+                        <button type="submit" name="update" class="adesign_btn">
+                            Update Positions Of Selected Rows
+                        </button>
+                    </form>
+                    {{-- <form action="activate_selected_pictures" method="post" class="action_form">
+                        @csrf
+                        <input type="hidden" name="id" value="<?php //print_r($all_pictures[$i]->picture_id); ?>">
+                        <button type="submit" name="activate" class="adesign_btn">
+                            Activate Selected Images
+                        </button>
+                    </form>
+                    <form action="inactivate_selected_pictures" method="post" class="action_form">
+                        @csrf
+                        <input type="hidden" name="id" value="<?php //print_r($all_pictures[$i]->picture_id); ?>">
+                        <button type="submit" name="inactivate" class="adesign_btn">
+                            Inactivate Selected Images
+                        </button>
+                    </form>
+                    <form action="delete_selected_pictures" method="post" class="action_form">
+                        @csrf
+                        <input type="hidden" name="id" value="<?php //print_r($all_pictures[$i]->picture_id); ?>">
+                        <button type="submit" name="delete" class="adesign_btn">
+                            Delete Selected Images
+                        </button>
+                    </form> --}}
+                    <form action="load_gallery" method="post" enctype="multipart/form-data">
+                        @csrf
+                        <?php if (isset($galleries)){ ?>
+                        <select name="gallery">
+                            <?php
+                            for ($i = 0; $i < count($galleries); $i++) {
+                                echo '<option value="' . $galleries[$i]->id . '">' . $galleries[$i]->name . '</option>';
+                            }
+                            ?>
+                        </select>
+                        <?php } ?>
+                        <button type="submit" name="submit" class="adesign_btn">
+                            Gallery Inladen
+                        </button>
+                    </form>
                     <table class="table table-striped table-hover table-bordered ">
                         <thead>
+                            <th>Select</th>
                             <th>Picture<br>ID</th>
                             <th>Preview<br>Picture</th>
                             <th>Picture<br>Path</th>
@@ -164,53 +321,65 @@
                             <th>Options</th>
                         </thead>
                         <tbody>
-                            @for ($i = 0; $i < count($all_pictures); $i++)
+                            <?php
+                            if (!isset($gallery_pictures)) {
+                                $gallery_pictures = $all_pictures;
+                            }
+                            ?>
+                            @for ($i = 0; $i < count($gallery_pictures); $i++)
                                 <tr>
                                     <td>
-                                        {{ $all_pictures[$i]->picture_id }}
+                                        <label class="container">
+                                            <input type="checkbox" name="select" data-id="<?php print_r($gallery_pictures[$i]->picture_id); ?>"
+                                                class="select">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        {{ $gallery_pictures[$i]->picture_id }}
                                     </td>
                                     <td>
                                         <?php
                                         $base_url = URL::to('/');
-                                        $image = $base_url . '/' . $all_pictures[$i]->path;
+                                        $image = $base_url . '/' . $gallery_pictures[$i]->path;
                                         ?>
                                         <img style="width:100px;height:100px;" draggable="false" src="<?= $image ?>"
                                             alt="gallery_image" data-id="<?= $i ?>" data-src="<?= $image ?>">
                                     </td>
                                     <td>
-                                        {{ $all_pictures[$i]->path }}
+                                        {{ $gallery_pictures[$i]->path }}
                                     </td>
                                     <td>
-                                        {{ $all_pictures[$i]->gallery_name }}
+                                        {{ $gallery_pictures[$i]->gallery_name }}
                                     </td>
                                     <td>
-                                        {{ $all_pictures[$i]->active }}
+                                        {{ $gallery_pictures[$i]->active }}
                                     </td>
                                     <td>
                                         <form action="update_picture_position" method="post" class="action_form">
                                             @csrf
-                                            <input type="hidden" name="id" value="<?php print_r($all_pictures[$i]->picture_id); ?>">
+                                            <input type="hidden" name="id" value="<?php print_r($gallery_pictures[$i]->picture_id); ?>">
                                             <input type="number" name="number" id="number"
-                                                value="{{ $all_pictures[$i]->gallery_position }}">
+                                                value="{{ $gallery_pictures[$i]->gallery_position }}">
                                             <button type="submit" name="update" class="adesign_btn">
                                                 Update
                                             </button>
                                         </form>
                                     </td>
                                     <td class="flex-right">
-                                        @if ($all_pictures[$i]->active == 0)
+                                        @if ($gallery_pictures[$i]->active == 0)
                                             <form action="make_picture_active" method="post" class="action_form">
                                                 @csrf
-                                                <input type="hidden" name="id" value="<?php print_r($all_pictures[$i]->picture_id); ?>">
+                                                <input type="hidden" name="id" value="<?php print_r($gallery_pictures[$i]->picture_id); ?>">
                                                 <button type="submit" name="activate" class="adesign_btn">
                                                     Activate
                                                 </button>
                                             </form>
                                         @endif
-                                        @if ($all_pictures[$i]->active == 1)
+                                        @if ($gallery_pictures[$i]->active == 1)
                                             <form action="make_picture_inactive" method="post" class="action_form">
                                                 @csrf
-                                                <input type="hidden" name="id" value="<?php print_r($all_pictures[$i]->picture_id); ?>">
+                                                <input type="hidden" name="id" value="<?php print_r($gallery_pictures[$i]->picture_id); ?>">
                                                 <button type="submit" name="inactivate" class="adesign_btn">
                                                     Inactivate
                                                 </button>
@@ -219,7 +388,7 @@
                                         <form action="delete_picture" method="post"
                                             onsubmit="return confirm('Delete?');" class="action_form">
                                             @csrf
-                                            <input type="hidden" name="id" value="<?php print_r($all_pictures[$i]->picture_id); ?>">
+                                            <input type="hidden" name="id" value="<?php print_r($gallery_pictures[$i]->picture_id); ?>">
                                             <button type="submit" name="unban" class="adesign_btn">
                                                 Delete
                                             </button>

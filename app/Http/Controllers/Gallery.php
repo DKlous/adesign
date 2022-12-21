@@ -86,44 +86,76 @@ class Gallery extends Controller
         $galleries = DB::select('SELECT * FROM `gallery`;');
         return view('admin_dashboard')->with(['active_pictures' => $active_pictures, 'galleries' => $galleries, 'all_pictures' => $all_pictures]);
     }
+    public function loadGallery(Request $http_request)
+    {
+        $gallery = (int) $http_request->gallery;
+        $galleries = DB::select('SELECT * FROM `gallery`;');
+        $gallery_pictures = DB::select("SELECT *, `picture`.`id` AS 'picture_id', `gallery`.`name` AS `gallery_name` FROM `picture` INNER JOIN `gallery` ON `gallery`.`id` = `picture`.`gallery_id` WHERE `gallery`.`id` = $gallery  ORDER BY `gallery_position` ASC;");
+        $all_pictures = DB::select('SELECT *, `picture`.`id` AS "picture_id", `gallery`.`name` AS `gallery_name` FROM `picture` INNER JOIN `gallery` ON `gallery`.`id` = `picture`.`gallery_id` ORDER BY `gallery_position` ASC;');
+        return view('admin_dashboard')->with(['all_pictures' => $all_pictures, 'galleries' => $galleries, 'gallery_pictures' => $gallery_pictures]);
+    }
     public function uploadImage(Request $http_request)
     {
-        $path = $http_request->file('image')->store('public');
-        Storage::setVisibility('file.jpg', 'public');
         // access the image by https://domain.com/storage/image.jpg
         // stored in the folder storage/app/public/
         $gallery = (int) $http_request->gallery;
-        $path = str_replace('public/', 'storage/', $path);
         $all_pictures = DB::select('SELECT *, `picture`.`id` AS "picture_id", `gallery`.`name` AS `gallery_name` FROM `picture` INNER JOIN `gallery` ON `gallery`.`id` = `picture`.`gallery_id` ORDER BY `gallery_position` ASC;');
         $maxPosValue = DB::select('SELECT MAX(`picture`.`gallery_position`) AS `max_position` FROM `picture`');
         $maxPosValue = $maxPosValue[0]->max_position;
         $maxPosValue++;
-        DB::insert("INSERT INTO `picture` (`path`, `gallery_id`, `active`, `gallery_position`) VALUES ('$path', '$gallery', '0' ,'$maxPosValue')");
+
+        if ($http_request->hasFile('attachment')) {
+            $files = $http_request->file('attachment');
+            $path = [];
+            for ($i = 0; $i < count($files); $i++) {
+                $attachment_path = (string)$files[$i]->store('public');
+                array_push($path, str_replace('public/', 'storage/', $attachment_path));
+                $current_path = $path[$i];
+                DB::insert("INSERT INTO `picture` (`path`, `gallery_id`, `active`, `gallery_position`) VALUES ('$current_path', '$gallery', '0' ,'$maxPosValue')");
+            }
+        }
         return redirect('admin_dashboard')->with(['path' => $path, 'upload' => 'success', 'all_pictures' => $all_pictures]);
     }
-    public function updatePicturePosition(Request $http_request) {
+    public function updatePicturePosition(Request $http_request)
+    {
         $id = $http_request->id;
         $position = $http_request->number;
         DB::update("UPDATE `picture` SET `gallery_position` = $position WHERE `picture`.`id` = $id");
         $all_pictures = DB::select('SELECT *, `picture`.`id` AS "picture_id", `gallery`.`name` AS `gallery_name` FROM `picture` INNER JOIN `gallery` ON `gallery`.`id` = `picture`.`gallery_id` ORDER BY `gallery_position` ASC;');
         return redirect('admin_dashboard')->with(['all_pictures' => $all_pictures]);
     }
-    public function makePictureActive(Request $http_request) {
+    public function makePictureActive(Request $http_request)
+    {
         $id = $http_request->id;
         DB::update("UPDATE `picture` SET `active` = '1' WHERE `picture`.`id` = $id");
         $all_pictures = DB::select('SELECT *, `picture`.`id` AS "picture_id", `gallery`.`name` AS `gallery_name` FROM `picture` INNER JOIN `gallery` ON `gallery`.`id` = `picture`.`gallery_id` ORDER BY `gallery_position` ASC;');
         return redirect('admin_dashboard')->with(['all_pictures' => $all_pictures]);
     }
-    public function makePictureInactive(Request $http_request) {
+    public function makePictureInactive(Request $http_request)
+    {
         $id = $http_request->id;
         DB::update("UPDATE `picture` SET `active` = '0' WHERE `picture`.`id` = $id");
         $all_pictures = DB::select('SELECT *, `picture`.`id` AS "picture_id", `gallery`.`name` AS `gallery_name` FROM `picture` INNER JOIN `gallery` ON `gallery`.`id` = `picture`.`gallery_id` ORDER BY `gallery_position` ASC;');
         return redirect('admin_dashboard')->with(['all_pictures' => $all_pictures]);
     }
-    public function deletePicture(Request $http_request) {
+    public function deletePicture(Request $http_request)
+    {
         $id = $http_request->id;
-        // dd($id);
         DB::delete("DELETE FROM `picture` WHERE `picture`.`id` = $id");
+        $all_pictures = DB::select('SELECT *, `picture`.`id` AS "picture_id", `gallery`.`name` AS `gallery_name` FROM `picture` INNER JOIN `gallery` ON `gallery`.`id` = `picture`.`gallery_id` ORDER BY `gallery_position` ASC;');
+        return redirect('admin_dashboard')->with(['all_pictures' => $all_pictures]);
+    }
+    public function UpdateSelectedPictures(Request $http_request)
+    {
+        for ($i = 0; $i <= $http_request->maxAmountSelected; $i++) {
+            //binding the data together
+            $selected_image_name = 'index' . $i;
+            $id = $http_request->$selected_image_name;
+
+            $position_name = 'gallery_position_index' . $i;
+            $position = $http_request->$position_name;
+            DB::update("UPDATE `picture` SET `gallery_position` = $position WHERE `picture`.`id` = $id");
+        }
         $all_pictures = DB::select('SELECT *, `picture`.`id` AS "picture_id", `gallery`.`name` AS `gallery_name` FROM `picture` INNER JOIN `gallery` ON `gallery`.`id` = `picture`.`gallery_id` ORDER BY `gallery_position` ASC;');
         return redirect('admin_dashboard')->with(['all_pictures' => $all_pictures]);
     }
