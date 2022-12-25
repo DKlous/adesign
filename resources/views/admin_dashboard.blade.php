@@ -318,38 +318,40 @@
                             Gallery Inladen
                         </button>
                     </form>
-                    <script>
-                        function selectAllRows() {
-                            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-                            var toggle = true;
-                            var checkboxValues = [];
-                            var selectAllRows = document.querySelector(".selectAllRows");
-
-                            for (var i = 0; i < checkboxes.length; i++) {
-                                checkboxValues.push(checkboxes[i].checked);
-                            }
-                            for (var i = 0; i < checkboxes.length; i++) {
-                                // check in the function for all array items
-                                if (checkboxValues.every(checkAge)) {
-                                    checkboxes[i].checked = false;
-                                    selectAllRows.innerHTML = "Select All Rows";
-                                } else {
-                                    checkboxes[i].checked = true;
-                                    selectAllRows.innerHTML = "Deselect All Rows";
-                                }
-
-                                function checkAge(value) {
-                                    return value == true;
-                                }
-                            }
-                        }
-                    </script>
-                    <button type="submit" onsubmit="event.preventDefault()" name="select_all_rows" onclick="selectAllRows()" class="adesign_btn mb-2 selectAllRows">
-                        Select All Rows
-                    </button>
                     <table class="table table-striped table-hover table-bordered ">
                         <thead>
-                            <th>Select</th>
+                            <th>
+                                <script>
+                                    function selectAllRows() {
+                                        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                                        var toggle = true;
+                                        var checkboxValues = [];
+                                        var selectAllRows = document.querySelector(".selectAllRows");
+
+                                        for (var i = 0; i < checkboxes.length; i++) {
+                                            checkboxValues.push(checkboxes[i].checked);
+                                        }
+                                        for (var i = 0; i < checkboxes.length; i++) {
+                                            // check in the function for all array items
+                                            if (checkboxValues.every(checkAge)) {
+                                                checkboxes[i].checked = false;
+                                                selectAllRows.innerHTML = "Select *";
+                                            } else {
+                                                checkboxes[i].checked = true;
+                                                selectAllRows.innerHTML = "Deselect *";
+                                            }
+
+                                            function checkAge(value) {
+                                                return value == true;
+                                            }
+                                        }
+                                    }
+                                </script>
+                                <button type="submit" onsubmit="event.preventDefault()" name="select_all_rows"
+                                    onclick="selectAllRows()" class="adesign_btn mb-2 selectAllRows">
+                                    Select *
+                                </button>
+                            </th>
                             <th>Picture<br>ID</th>
                             <th>Preview<br>Picture</th>
                             <th>Picture<br>Path</th>
