@@ -245,7 +245,8 @@
             <details open>
                 <summary>Afbeeldingen Aanpassen & Verwijderen</summary>
                 <div class="summary2_contents">
-                    <form action="update_selected_pictures" method="post" class="action_form" onsubmit="getRecords()" id="update_selected_pictures">
+                    <form action="update_selected_pictures" method="post" class="action_form" onsubmit="getRecords()"
+                        id="update_selected_pictures">
                         @csrf
                         <script>
                             function getRecords() {
@@ -257,7 +258,8 @@
                                         form.innerHTML += `<input type="hidden" value="${index}" name="maxAmountSelected">`;
                                     }
                                     form.innerHTML += `<input type="hidden" value="${checkbox.getAttribute("data-id")}" name="index${index}">`;
-                                    form.innerHTML += `<input type="hidden" value="${checkbox.parentElement.parentElement.parentElement.children[6].children[0].children[2].value}" name="gallery_position_index${index}">`;
+                                    form.innerHTML +=
+                                        `<input type="hidden" value="${checkbox.parentElement.parentElement.parentElement.children[6].children[0].children[2].value}" name="gallery_position_index${index}">`;
                                     index++;
                                 }
                             }
@@ -266,34 +268,48 @@
                             Update Positions Of Selected Rows
                         </button>
                     </form>
-                    {{-- <form action="activate_selected_pictures" method="post" class="action_form">
+                    <form action="delete_selected_pictures" method="post" class="action_form" onsubmit="getRecords()"
+                        id="delete_selected_pictures">
                         @csrf
-                        <input type="hidden" name="id" value="<?php //print_r($all_pictures[$i]->picture_id); ?>">
-                        <button type="submit" name="activate" class="adesign_btn">
-                            Activate Selected Images
-                        </button>
-                    </form>
-                    <form action="inactivate_selected_pictures" method="post" class="action_form">
-                        @csrf
-                        <input type="hidden" name="id" value="<?php //print_r($all_pictures[$i]->picture_id); ?>">
-                        <button type="submit" name="inactivate" class="adesign_btn">
-                            Inactivate Selected Images
-                        </button>
-                    </form>
-                    <form action="delete_selected_pictures" method="post" class="action_form">
-                        @csrf
-                        <input type="hidden" name="id" value="<?php //print_r($all_pictures[$i]->picture_id); ?>">
+                        <script>
+                            function getRecords() {
+                                var markedCheckbox = document.querySelectorAll('input[type="checkbox"]:checked');
+                                var index = 0;
+                                var form = document.querySelector("#delete_selected_pictures");
+                                for (var checkbox of markedCheckbox) {
+                                    if (index === markedCheckbox.length - 1) {
+                                        form.innerHTML += `<input type="hidden" value="${index}" name="maxAmountSelected">`;
+                                    }
+                                    form.innerHTML += `<input type="hidden" value="${checkbox.getAttribute("data-id")}" name="index${index}">`;
+                                    form.innerHTML +=
+                                        `<input type="hidden" value="${checkbox.parentElement.parentElement.parentElement.children[6].children[0].children[2].value}" name="gallery_position_index${index}">`;
+                                    index++;
+                                }
+                            }
+                        </script>
                         <button type="submit" name="delete" class="adesign_btn">
-                            Delete Selected Images
+                            Delete Selected Rows
                         </button>
-                    </form> --}}
+                    </form>
                     <form action="load_gallery" method="post" enctype="multipart/form-data">
                         @csrf
                         <?php if (isset($galleries)){ ?>
                         <select name="gallery">
                             <?php
+                            $galleryIdArray = [];
                             for ($i = 0; $i < count($galleries); $i++) {
-                                echo '<option value="' . $galleries[$i]->id . '">' . $galleries[$i]->name . '</option>';
+                                array_push($galleryIdArray, $galleries[$i]->id);
+                            }
+                            
+                            // show all gallery options
+                            $gallery = session()->get('LastKnownRequestedGallery');
+                            for ($i = 0; $i < count($galleries); $i++) {
+                                // set last known requested gallery as selected by default
+                                if ($galleryIdArray[$i] === $gallery) {
+                                    echo '<option selected value="' . $galleryIdArray[$i] . '">' . $galleries[$i]->name . '</option>';
+                                } else {
+                                    echo '<option value="' . $galleryIdArray[$i] . '">' . $galleries[$i]->name . '</option>';
+                                }
                             }
                             ?>
                         </select>
@@ -302,6 +318,32 @@
                             Gallery Inladen
                         </button>
                     </form>
+                    <script>
+                        function selectAllRows() {
+                            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                            var toggle = true;
+                            var checkboxValues = [];
+
+                            for (var i = 0; i < checkboxes.length; i++) {
+                                checkboxValues.push(checkboxes[i].checked);
+                            }
+                            for (var i = 0; i < checkboxes.length; i++) {
+                                // check in the function for all array items
+                                if (checkboxValues.every(checkAge)) {
+                                    checkboxes[i].checked = false;
+                                } else {
+                                    checkboxes[i].checked = true;
+                                }
+
+                                function checkAge(value) {
+                                    return value == true;
+                                }
+                            }
+                        }
+                    </script>
+                    <button type="submit" onsubmit="event.preventDefault()" name="select_all_rows" onclick="selectAllRows()" class="adesign_btn mb-2">
+                        (Un)Select All Rows
+                    </button>
                     <table class="table table-striped table-hover table-bordered ">
                         <thead>
                             <th>Select</th>

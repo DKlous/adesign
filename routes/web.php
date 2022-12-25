@@ -41,6 +41,7 @@ Route::post('delete_picture', [Gallery::class, 'deletePicture']);
 Route::post('load_gallery', [Gallery::class, 'loadGallery']);
 
 //bulk actions
+Route::post('delete_selected_pictures', [Gallery::class, 'deleteSelectedPictures']);
 Route::post('update_selected_pictures', [Gallery::class, 'UpdateSelectedPictures']);
 Route::post('activate_selected_pictures', [Gallery::class, 'activateSelectedPictures']);
 Route::post('inactivate_selected_pictures', [Gallery::class, 'inactivateSelectedPictures']);

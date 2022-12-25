@@ -84,15 +84,22 @@ class Gallery extends Controller
         $all_pictures = DB::select('SELECT *, `picture`.`id` AS "picture_id", `gallery`.`name` AS `gallery_name` FROM `picture` INNER JOIN `gallery` ON `gallery`.`id` = `picture`.`gallery_id` ORDER BY `gallery_position` ASC;');
         $active_pictures = DB::select('SELECT *, `picture`.`id` AS "picture_id", `gallery`.`name` AS `gallery_name` FROM `picture` INNER JOIN `gallery` ON `gallery`.`id` = `picture`.`gallery_id`  WHERE `picture`.`active` = 1 ORDER BY `gallery_position` ASC;');
         $galleries = DB::select('SELECT * FROM `gallery`;');
-        return view('admin_dashboard')->with(['active_pictures' => $active_pictures, 'galleries' => $galleries, 'all_pictures' => $all_pictures]);
+        if (session()->has('LastKnownRequestedGallery')) {
+            $gallery = session()->get('LastKnownRequestedGallery');
+            $gallery_pictures = DB::select("SELECT *, `picture`.`id` AS 'picture_id', `gallery`.`name` AS `gallery_name` FROM `picture` INNER JOIN `gallery` ON `gallery`.`id` = `picture`.`gallery_id` WHERE `gallery`.`id` = $gallery  ORDER BY `gallery_position` ASC;");
+            return view('admin_dashboard')->with(['active_pictures' => $active_pictures, 'galleries' => $galleries, 'gallery_pictures' => $gallery_pictures, 'all_pictures' => $all_pictures]);
+        } else {
+            return view('admin_dashboard')->with(['active_pictures' => $active_pictures, 'galleries' => $galleries, 'all_pictures' => $all_pictures]);
+        }
     }
     public function loadGallery(Request $http_request)
     {
         $gallery = (int) $http_request->gallery;
+        session()->put('LastKnownRequestedGallery', $gallery);
         $galleries = DB::select('SELECT * FROM `gallery`;');
         $gallery_pictures = DB::select("SELECT *, `picture`.`id` AS 'picture_id', `gallery`.`name` AS `gallery_name` FROM `picture` INNER JOIN `gallery` ON `gallery`.`id` = `picture`.`gallery_id` WHERE `gallery`.`id` = $gallery  ORDER BY `gallery_position` ASC;");
         $all_pictures = DB::select('SELECT *, `picture`.`id` AS "picture_id", `gallery`.`name` AS `gallery_name` FROM `picture` INNER JOIN `gallery` ON `gallery`.`id` = `picture`.`gallery_id` ORDER BY `gallery_position` ASC;');
-        return view('admin_dashboard')->with(['all_pictures' => $all_pictures, 'galleries' => $galleries, 'gallery_pictures' => $gallery_pictures]);
+        return redirect('admin_dashboard')->with(['all_pictures' => $all_pictures, 'galleries' => $galleries, 'gallery_pictures' => $gallery_pictures]);
     }
     public function uploadImage(Request $http_request)
     {
@@ -108,7 +115,7 @@ class Gallery extends Controller
             $files = $http_request->file('attachment');
             $path = [];
             for ($i = 0; $i < count($files); $i++) {
-                $attachment_path = (string)$files[$i]->store('public');
+                $attachment_path = (string) $files[$i]->store('public');
                 array_push($path, str_replace('public/', 'storage/', $attachment_path));
                 $current_path = $path[$i];
                 DB::insert("INSERT INTO `picture` (`path`, `gallery_id`, `active`, `gallery_position`) VALUES ('$current_path', '$gallery', '0' ,'$maxPosValue')");
@@ -155,6 +162,17 @@ class Gallery extends Controller
             $position_name = 'gallery_position_index' . $i;
             $position = $http_request->$position_name;
             DB::update("UPDATE `picture` SET `gallery_position` = $position WHERE `picture`.`id` = $id");
+        }
+        $all_pictures = DB::select('SELECT *, `picture`.`id` AS "picture_id", `gallery`.`name` AS `gallery_name` FROM `picture` INNER JOIN `gallery` ON `gallery`.`id` = `picture`.`gallery_id` ORDER BY `gallery_position` ASC;');
+        return redirect('admin_dashboard')->with(['all_pictures' => $all_pictures]);
+    }
+    public function DeleteSelectedPictures(Request $http_request)
+    {
+        for ($i = 0; $i <= $http_request->maxAmountSelected; $i++) {
+            //binding the data together
+            $selected_image_name = 'index' . $i;
+            $id = $http_request->$selected_image_name;
+            DB::update("DELETE FROM `picture` WHERE `picture`.`id` = $id");
         }
         $all_pictures = DB::select('SELECT *, `picture`.`id` AS "picture_id", `gallery`.`name` AS `gallery_name` FROM `picture` INNER JOIN `gallery` ON `gallery`.`id` = `picture`.`gallery_id` ORDER BY `gallery_position` ASC;');
         return redirect('admin_dashboard')->with(['all_pictures' => $all_pictures]);
