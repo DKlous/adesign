@@ -323,6 +323,7 @@
                             var checkboxes = document.querySelectorAll('input[type="checkbox"]');
                             var toggle = true;
                             var checkboxValues = [];
+                            var selectAllRows = document.querySelector(".selectAllRows");
 
                             for (var i = 0; i < checkboxes.length; i++) {
                                 checkboxValues.push(checkboxes[i].checked);
@@ -331,8 +332,10 @@
                                 // check in the function for all array items
                                 if (checkboxValues.every(checkAge)) {
                                     checkboxes[i].checked = false;
+                                    selectAllRows.innerHTML = "Select All Rows";
                                 } else {
                                     checkboxes[i].checked = true;
+                                    selectAllRows.innerHTML = "Deselect All Rows";
                                 }
 
                                 function checkAge(value) {
@@ -341,8 +344,8 @@
                             }
                         }
                     </script>
-                    <button type="submit" onsubmit="event.preventDefault()" name="select_all_rows" onclick="selectAllRows()" class="adesign_btn mb-2">
-                        (Un)Select All Rows
+                    <button type="submit" onsubmit="event.preventDefault()" name="select_all_rows" onclick="selectAllRows()" class="adesign_btn mb-2 selectAllRows">
+                        Select All Rows
                     </button>
                     <table class="table table-striped table-hover table-bordered ">
                         <thead>
