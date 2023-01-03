@@ -118,7 +118,7 @@ class Gallery extends Controller
                 $attachment_path = (string) $files[$i]->store('public');
                 array_push($path, str_replace('public/', 'storage/', $attachment_path));
                 $current_path = $path[$i];
-                DB::insert("INSERT INTO `picture` (`path`, `gallery_id`, `active`, `gallery_position`) VALUES ('$current_path', '$gallery', '0' ,'$maxPosValue')");
+                DB::insert("INSERT INTO `picture` (`path`, `gallery_id`, `active`, `gallery_position`) VALUES ('$current_path', '$gallery', 1 ,'$maxPosValue')");
             }
         }
         return redirect('admin_dashboard')->with(['path' => $path, 'upload' => 'success', 'all_pictures' => $all_pictures]);

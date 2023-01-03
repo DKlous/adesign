@@ -29,10 +29,12 @@ class UserAuth extends Controller
             } else {
                 $http_request->session()->put('LoginSystemMessage', 'The login credentials are incorrect.');
                 DB::insert("INSERT INTO `login_attempt` (`ip_address`, `success`) VALUES ('$ip', 0);");
+                return redirect('login');
             }
         } else {
             $http_request->session()->put('LoginSystemMessage', 'The login credentials are incorrect.');
             DB::insert("INSERT INTO `login_attempt` (`ip_address`, `success`) VALUES ('$ip', 0);");
+            return redirect('login');
         }
         
         // The rule below send the user back to the admin_dashboard view.
